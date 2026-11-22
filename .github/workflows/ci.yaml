@@ -1,0 +1,18 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  # The org requires a "ci" check. Here: the pictures the deploy Slack
+  # messages link to are still present and are PNG files.
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          for f in approve-with-your-code.png; do
+            file "$f" | grep -q 'PNG image' || { echo "::error::$f missing or not a PNG"; exit 1; }
+          done
